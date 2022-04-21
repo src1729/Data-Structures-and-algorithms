@@ -1,4 +1,4 @@
-class node:    # each binory trees
+class node:    # each binomial trees
     def __init__(self,val=None):
         self.val=val
         self.deg=0
