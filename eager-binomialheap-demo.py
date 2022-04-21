@@ -95,7 +95,7 @@ class beap:   #bheap= array of root nodes
                 bp2.append(bheap[i])
         return (m,self.union(bp1,bp2))    #returns minimum and final bheap after deletion of min.
 
-    def find(self,bheap,val):        #search function: O(n) recursive heavy.used in decrease and delete
+    def find(self,bheap,val):        #search function: O(n) recursive heavy.used in decrease(amortised-logn(loglogn)) and delete
         if bheap==None: 
             return None
         if bheap.val==None:return None
