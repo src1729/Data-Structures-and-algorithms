@@ -2,7 +2,7 @@ class node:    # each binomial trees
     def __init__(self,val=None):
         self.val=val
         self.deg=0
-        self.parent=self.left=self.bro=None
+        self.parent=self.left=self.bro=None       #bro is just fancy way to say sibling lol
 
 class beap:   #bheap= array of root nodes
     def link(self,b1,b2):  #link 2 trees
