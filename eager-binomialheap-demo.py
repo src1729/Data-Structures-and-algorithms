@@ -20,6 +20,7 @@ class beap:   #bheap= array of root nodes
         nexx=2
         bp=[]
         n=len(bheap)
+        if n==0:return bp
         while x<n:
             if x==n-1:    #reched the end of the array
                 bp.append(bheap[x])
@@ -94,53 +95,83 @@ class beap:   #bheap= array of root nodes
                 bp2.append(bheap[i])
         return (m,self.union(bp1,bp2))    #returns minimum and final bheap after deletion of min.
 
-    def decrease(self,x,k):    #decrease value of x to k
-        x.val=k
+    def find(self,bheap,val):        #search function: O(n) recursive heavy.used in decrease and delete
+        if bheap==None: 
+            return None
+        if bheap.val==None:return None
+        if bheap.val==val:
+            return bheap
+        x=node()
+        x=self.find(bheap.left,val)
+        if x: return x
+        return self.find(bheap.bro,val)
+
+    def decrease(self,bheap,k,nk):    #decrease value of x to k
+        x=node()
+        c=0
+        for i in range (len(bheap)):
+           if bheap[i]:
+               if bheap[i].val==k:
+                   c=i
+                   break
+           x=self.find(bheap[i].left,k)
+           if x:
+               c=i
+               break
+        if not x: return bheap
+        x.val=nk
         while x.parent:
             if x.val<x.parent.val:
                 x.val,x.parent.val=x.parent.val,x.val
                 x=x.parent
             else: break
-        return  
-    def increase(self,x,k):    #increase value of x to k
-        x.val=k
-        while x.left:
-            if x.val>x.left.val:
-                x.val,x.left.val=x.left.val,x.val
-                x=x.left
-            else: break
-        return  
-    def delkey(self,x,key,bheap):
+        while x.parent:
+            x=x.parent
+        bheap[c]=x      #update the tree where decrease operation took place
+        return bheap
+
+    def delkey(self,rt,key,bheap):    #delete a key from the heap
+        x=node()
+        x=self.find(rt,key)
+        if not x: return bheap
         m=self.findmin(bheap)
-        self.decrease(x,m-1)
+        bheap=self.decrease(bheap,key,m-1)
         m,bheap=self.extractmin(bheap)
         return bheap
-n=int(input())
+    
+    def display(self,head):           #display the heap
+        while head:
+            print(head.val,end=' ')
+            self.display(head.left)
+            head=head.bro
+
+n=int(input())      #number of input
 bhp=beap()
 bh=[]
 for i in range(n):
-    x,y =input().split()
-    if x=="a":
+    x =input()
+    if x=="-1":       #-1 to break
+        break 
+    if x=="a":         #next line should contain a single integer to be added to heap
+       y=input()
        bh= bhp.insert(bh,int(y))
-    if x=="em":
+    if x=="em":          #extracts minimum
+       if len(bh)==0:
+           print("error")
+           continue
        m,bh= bhp.extractmin(bh)
        print(m)
-    if x=="m":
+    if x=="m":      #prints minimum
+        if len(bh)==0:
+            print("error")
+            continue
         print(bhp.findmin(bh))
-    
-        
-
-
-        
-
-    
-        
-
-
-
-
-
-
-
-
-
+    if x=="d":           #next line should contain 2 integers , first integer decreased to 2nd
+        y,z=input().split()
+        bh=bhp.decrease(bh,int(y),int(z))
+    if x=="del":        #next line should contain key to be deleted
+        y=input()
+        if len(bh)>0:
+            bh=bhp.delkey(bh[0],int(y),bh)
+print("print the heap:")
+if len(bh)>0:bhp.display(bh[0])
